@@ -157,9 +157,37 @@ class Scramble
         return RouteFacade::get($path, function (Generator $generator) use ($api) {
             $config = static::getGeneratorConfig($api);
 
-            return view('scramble::docs', [
+            $articles = [
+                [
+                    'title' => 'Introdução',
+                    'data' => view('api.index')->render(),
+                    'uri' => '/',
+                    'type' => 'html'
+                ]
+            ];
+
+            foreach (glob(resource_path('views/api/articles/*.blade.php')) as $file) {
+                $articles[] = [
+                    'title' => basename($file, '.blade.php'),
+                    'data' => view('api.articles.' . basename($file, '.blade.php'))->render(),
+                    'uri' => '/articles/' . basename($file, '.blade.php'),
+                    'type' => 'html'
+                ];
+            }
+
+            foreach (glob(resource_path('views/api/articles/*.md')) as $file) {
+                $articles[] = [
+                    'title' => basename($file, '.md'),
+                    'data' => file_get_contents($file),
+                    'uri' => '/articles/' . basename($file, '.md'),
+                    'type' => 'article'
+                ];
+            }
+
+            return view('api.docs', [
                 'spec' => $generator($config),
                 'config' => $config,
+                'articles' => $articles
             ]);
         })
             ->middleware($config->get('middleware', [RestrictedDocsAccess::class]));
