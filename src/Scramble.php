@@ -168,7 +168,7 @@ class Scramble
 
             foreach (glob(resource_path('views/api/articles/*.blade.php')) as $file) {
                 $articles[] = [
-                    'title' => basename($file, '.blade.php'),
+                    'title' => __(basename($file, '.blade.php')),
                     'data' => view('api.articles.' . basename($file, '.blade.php'))->render(),
                     'uri' => '/articles/' . basename($file, '.blade.php'),
                     'type' => 'html'
@@ -177,7 +177,7 @@ class Scramble
 
             foreach (glob(resource_path('views/api/articles/*.md')) as $file) {
                 $articles[] = [
-                    'title' => basename($file, '.md'),
+                    'title' => __(basename($file, '.md')),
                     'data' => file_get_contents($file),
                     'uri' => '/articles/' . basename($file, '.md'),
                     'type' => 'article'
