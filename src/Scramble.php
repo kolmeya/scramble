@@ -47,6 +47,8 @@ class Scramble
      */
     public static array $extensions = [];
 
+    public static array $articles = [];
+
     /**
      * Disables registration of default API documentation routes.
      */
@@ -157,32 +159,7 @@ class Scramble
         return RouteFacade::get($path, function (Generator $generator) use ($api) {
             $config = static::getGeneratorConfig($api);
 
-            $articles = [
-                [
-                    'title' => 'Introdução',
-                    'data' => view('api.index')->render(),
-                    'uri' => '/',
-                    'type' => 'html'
-                ]
-            ];
-
-            foreach (glob(resource_path('views/api/articles/*.blade.php')) as $file) {
-                $articles[] = [
-                    'title' => __(basename($file, '.blade.php')),
-                    'data' => view('api.articles.' . basename($file, '.blade.php'))->render(),
-                    'uri' => '/articles/' . basename($file, '.blade.php'),
-                    'type' => 'html'
-                ];
-            }
-
-            foreach (glob(resource_path('views/api/articles/*.md')) as $file) {
-                $articles[] = [
-                    'title' => __(basename($file, '.md')),
-                    'data' => file_get_contents($file),
-                    'uri' => '/articles/' . basename($file, '.md'),
-                    'type' => 'article'
-                ];
-            }
+            $articles = static::$articles;
 
             return view('api.docs', [
                 'spec' => $generator($config),
@@ -191,6 +168,11 @@ class Scramble
             ]);
         })
             ->middleware($config->get('middleware', [RestrictedDocsAccess::class]));
+    }
+
+    public static function registerArticles(array $articles)
+    {
+        static::$articles = $articles;
     }
 
     public static function registerJsonSpecificationRoute(string $path, string $api = 'default'): Route
