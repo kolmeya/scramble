@@ -1,12 +1,12 @@
 {
-    "name": "dedoc/scramble",
+    "name": "kolmeya/scramble",
     "description": "Automatic generation of API documentation for Laravel applications.",
     "keywords": [
         "laravel",
         "documentation",
         "openapi"
     ],
-    "homepage": "https://github.com/dedoc/scramble",
+    "homepage": "https://github.com/kolmeya/scramble",
     "license": "MIT",
     "authors": [
         {
